@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/admin-layout}">
+
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>배송 규칙 이름</h2>
+        <form method="get" action="/admin/delivery-rule-name/register">
+            <button type="submit" class="btn btn-outline-primary">등록하기</button>
+        </form>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>배송규칙 이름</th>
+                <th>생성일자</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="deliveryRuleName : ${deliveryList}">
+                <td th:text="${deliveryRuleName.id}"></td>
+                <td th:text="${deliveryRuleName.createdDate}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/admin-layout}">
+
+<div layout:fragment="content">
+    <p>배송 규칙 이름 등록 페이지</p>
+    <div class="input-group input-group-sm justify-content-center mb-3">
+        <form name="form" method="post" th:action="@{/admin/delivery-rule-name/register}">
+            <div class="form-group">
+                <input type="text" class="form-control" id="id" name="id" placeholder="배송 규칙 명" required>
+                <button type="submit" id="button-register">등록</button>
+            </div>
+        </form>
+    </div>
+</div>

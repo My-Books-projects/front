@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/admin-layout}">
+
+<div layout:fragment="content">
+    <div class="container mt-5">
+        <h2>배송 규칙</h2>
+        <form method="get" action="/admin/delivery-rule/register">
+            <button type="submit" class="btn btn-outline-primary">등록하기</button>
+        </form>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>배송 규칙 명</th>
+                <th>회사 이름</th>
+                <th>가격</th>
+                <th>가격 규칙</th>
+                <th>생성 일자</th>
+                <th>사용 가능 여부</th>
+                <th>수정</th>
+                <th>비활성화</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="deliveryRule : ${deliveryList}">
+                <td th:text="${deliveryRule.deliveryRuleNameId}"></td>
+                <td th:text="${deliveryRule.companyName}"></td>
+                <td th:text="${deliveryRule.cost}"></td>
+                <td th:text="${deliveryRule.ruleCost}"></td>
+                <td th:text="${deliveryRule.createdDate}"></td>
+                <td th:text="${deliveryRule.isAvailable == 1 ? '활용 가능' : '활용 불가능'}"></td>
+                <td>
+                    <a th:href="@{'/admin/delivery-rule/modify/' + ${deliveryRule.id}}"
+                       class="btn btn-outline-secondary">수정</a>
+                </td>
+                <td>
+                    <form th:action="@{'/admin/delivery-rule/delete/' + ${deliveryRule.id}}" method="post">
+                        <button type="submit" class="btn btn-outline-secondary">비활성화</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>

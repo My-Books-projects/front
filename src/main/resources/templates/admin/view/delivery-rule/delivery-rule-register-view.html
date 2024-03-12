@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/admin-layout}">
+
+<div layout:fragment="content">
+    <p>배송 규칙 등록 페이지</p>
+    <div class="input-group input-group-sm justify-content-center mb-3">
+        <form name="form" method="post" th:action="@{/admin/delivery-rule/register}" >
+            <div class="form-group">
+                <label for="deliveryRuleNameRuleId">배송 규칙 이름:</label>
+                <select class="form-control" id="deliveryRuleNameRuleId" name="deliveryNameRuleId"  required>
+                    <option value="">배송 규칙을 선택하세요</option>
+                    <option th:each="deliveryRuleName : ${deliveryRuleNameList}"
+                            th:value="${deliveryRuleName.id}" th:text="${deliveryRuleName.id} "></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="deliveryRuleCompanyName">회사 이름:</label>
+                <input type="text" class="form-control" id="deliveryRuleCompanyName" name="deliveryRuleCompanyName"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="deliveryCost">배송 비용:</label>
+                <input type="number" class="form-control" id="deliveryCost" name="deliveryCost" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="deliveryRuleCost">규칙 비용:</label>
+                <input type="number" class="form-control" id="deliveryRuleCost" name="deliveryRuleCost" min="0"
+                       required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">등록</button>
+        </form>
+    </div>
+</div>
