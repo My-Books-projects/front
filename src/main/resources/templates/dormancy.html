@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layout/my-books-layout}">
+
+<div layout:fragment="content">
+
+    <!-- Start Breadcrumbs -->
+    <div class="breadcrumbs">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-12">
+                </div>
+                <div class="col-lg-6 col-md-6 col-12">
+                    <ul class="breadcrumb-nav">
+                        <li><a href="/"><i class="lni lni-home"></i>Home</a></li>
+                        <li>휴면인증</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Breadcrumbs -->
+
+    <!-- Start Account Register Area -->
+    <section>
+        <div class="account-login section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 offset-lg-3 col-md-10 offset-md-1 col-12">
+                        <div class="register-form">
+
+                            <form id="registerForm" class="row" method="post" action="/dormancy"
+                                  onsubmit="return checkAuth()">
+                                <div class="social-login text-center"> <!-- 가운데 정렬을 위한 클래스 추가 -->
+                                    <div class="row justify-content-center"> <!-- 요소를 가운데로 정렬하기 위해 추가 -->
+                                        <div class="col-lg-12 col-md-4 col-12">
+                                            로그인한지 90일이 지나 휴면계정상태입니다.<br>인증후 재로그인 해주세요
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="my-4">
+
+                                <!-- 인증번호 입력 폼 -->
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="verificationCode">인증번호 입력</label>
+                                        <input class="form-control" type="text" id="verificationCode"
+                                               name="verificationCode" required>
+                                    </div>
+                                </div>
+
+                                <!-- 버튼 -->
+                                <div class="col-sm-6 mt-4">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-sm" type="button"
+                                                onclick="requestAuthCode()">인증번호 받기
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="button">
+                                    <button class="btn" type="submit">휴면인증</button>
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Account Register Area -->
+
+    <script>
+        var authNumber; // 전역 변수로 선언하여 다른 함수에서도 사용할 수 있도록 설정
+
+
+        // '인증번호 받기' 버튼을 클릭하면 서버로부터 인증번호를 요청하고 저장
+        function requestAuthCode() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/dooray", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var responseJson = JSON.parse(xhr.responseText); // JSON 문자열을 JavaScript 객체로 변환
+                        authNumber = responseJson.randomNumber; // 서버로부터 받은 인증번호 중 randomNumber 값만 추출하여 저장
+                        alert("인증번호를 전송했습니다.");
+                    } else {
+                        alert("인증번호 요청에 실패했습니다.");
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+
+        function checkAuth() {
+
+            // 인증번호 확인
+            var verificationCode = document.getElementById('verificationCode').value;
+
+            if (verificationCode !== authNumber) {
+                // 인증번호가 일치하지 않는 경우
+                alert("인증번호가 일치하지 않습니다.");
+                return false; // 회원가입 폼 제출 방지
+            }
+
+            // 인증번호가 일치하는 경우 회원가입 폼 제출
+            return true;
+        }
+    </script>
+
+</div>
+</html>

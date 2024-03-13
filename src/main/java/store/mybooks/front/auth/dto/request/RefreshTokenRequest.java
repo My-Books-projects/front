@@ -20,4 +20,8 @@ public class RefreshTokenRequest {
 
     private String accessToken;
 
+    private String ip;
+
+    private String userAgent;
+
 }

@@ -11,8 +11,8 @@ package store.mybooks.front.auth.exception;
  * -----------------------------------------------------------
  * 3/3/24        masiljangajji       최초 생성
  */
-public class StatusIsNotActiveException extends RuntimeException{
-    public StatusIsNotActiveException() {
-        super("활성 상태가 아닙니다");
+public class StatusIsDormancyException extends RuntimeException{
+    public StatusIsDormancyException() {
+        super("휴면 상태입니다");
     }
 }

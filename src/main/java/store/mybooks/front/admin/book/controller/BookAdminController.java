@@ -22,7 +22,7 @@ import store.mybooks.front.admin.book.model.request.BookModifyRequest;
 import store.mybooks.front.admin.book.model.response.BookDetailResponse;
 import store.mybooks.front.admin.book.service.BookAdminService;
 import store.mybooks.front.admin.category.model.response.CategoryIdAndName;
-import store.mybooks.front.admin.category.service.CategoryService;
+import store.mybooks.front.admin.category.service.CategoryAdminService;
 import store.mybooks.front.admin.publisher.service.PublisherService;
 import store.mybooks.front.admin.tag.model.response.TagGetResponseForBookDetail;
 import store.mybooks.front.admin.tag.service.TagService;
@@ -44,7 +44,7 @@ import store.mybooks.front.admin.tag.service.TagService;
 public class BookAdminController {
     private final BookAdminService bookAdminService;
     private final PublisherService publisherService;
-    private final CategoryService categoryService;
+    private final CategoryAdminService categoryAdminService;
     private final TagService tagService;
     private final AuthorService authorService;
 
@@ -74,7 +74,7 @@ public class BookAdminController {
     @GetMapping("/register")
     public String getBookRegisterPage(Model model) {
         model.addAttribute("publishers", publisherService.getAllPublishers());
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryAdminService.getCategories());
         model.addAttribute("tags", tagService.getTags());
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("bookStatuses", bookAdminService.getBookStatus());
@@ -114,7 +114,7 @@ public class BookAdminController {
                 book.getTagList().stream().map(TagGetResponseForBookDetail::getId).collect(Collectors.toList()));
         model.addAttribute("bookCategoryList", book.getCategoryList().stream().map(CategoryIdAndName::getId).collect(Collectors.toList()));
 
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryAdminService.getCategories());
         model.addAttribute("tags", tagService.getTags());
         model.addAttribute("authors", authorService.getAllAuthors());
         model.addAttribute("bookStatuses", bookAdminService.getBookStatus());

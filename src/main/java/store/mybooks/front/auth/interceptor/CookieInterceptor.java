@@ -24,6 +24,7 @@ public class CookieInterceptor implements HandlerInterceptor {
 
         System.out.println("요청 URI: " + request.getRequestURI());
         request.setAttribute("identity_cookie_value", CookieUtils.getIdentityCookieValue(request));
+        request.setAttribute("admin_cookie_value", CookieUtils.getAdminCookieValue(request));
 
         return true; // 요청 계속 진행
     }

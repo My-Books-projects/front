@@ -113,6 +113,7 @@
                                 <a th:href="@{/login}" th:unless="${identity_cookie_value}">로그인</a>
                                 <a th:href="@{/logout}" th:if="${identity_cookie_value}">로그아웃</a>
                                 <a th:href="@{/signup}" th:unless="${identity_cookie_value}">회원가입</a>
+                                <a th:href="@{/admin}" th:if="${admin_cookie_value}">관리자페이지</a>
                             </div>
                         </div>
                     </div>

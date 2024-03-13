@@ -25,4 +25,5 @@ public class RedisProperties {
     private int port;
     private String password;
     private int database;
+    private Long adminExpiration;
 }

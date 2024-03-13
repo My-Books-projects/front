@@ -235,17 +235,17 @@
             // 새 창 열기
             newWindow = window.open("", "NewWindow", "width=400,height=100");
 
-            console.log(addressId)
+            console.log(addressId);
 
             // 새 창에 폼 내용 작성
             var content = `
         <html>
         <head>
             <title>주소 수정</title>
-            <!-- 필요한 CSS와 스타일을 추가하세요 -->
         </head>
         <body>
-        <form id="modifyForm" method="post" action="/user/address/modify">
+
+        <form id="modifyForm" method="post" action="https://www.my-books.store/user/address/modify">
             <!-- 주소 id를 hidden으로 전달 -->
             <input type="hidden" name="addressId" value="${addressId}"/>
 
@@ -258,7 +258,7 @@
                 <label for="modify_sample6_detailAddress">상세주소</label>
                 <input type="text" id="modify_sample6_detailAddress" class="form-control" name="detail" placeholder="상세주소" required>
             </div>
-            <button type="submit">변경</button>
+            <button type="button" onclick="submitForm()">변경</button>
         </form>
         </body>
         </html>
@@ -266,24 +266,23 @@
 
             // 새 창에 내용 쓰기
             newWindow.document.write(content);
+        }
 
-            // 폼 제출 시 새 창 닫기
-            newWindow.document.getElementById('modifyForm').addEventListener('submit', function (event) {
-                event.preventDefault(); // 폼 제출 방지
-                var form = event.target; // 폼 요소 가져오기
-                var formData = new FormData(form); // 폼 데이터 생성
-                var xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
-                xhr.open('POST', form.action); // 요청 설정
-                xhr.onload = function () {
-                    // 요청 완료 시
-                    if (xhr.status === 200) {
-                        // 요청 성공 시
-                        newWindow.close(); // 새 창 닫기
-                        location.reload(); // 기존 페이지 새로고침
-                    }
-                };
-                xhr.send(formData); // 요청 전송
-            });
+        // 폼 제출 함수
+        function submitForm() {
+            var form = newWindow.document.getElementById('modifyForm'); // 폼 요소 가져오기
+            var formData = new FormData(form); // 폼 데이터 생성
+            var xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성
+            xhr.open('POST', form.action); // 요청 설정
+            xhr.onload = function () {
+                // 요청 완료 시
+                if (xhr.status === 200) {
+                    // 요청 성공 시
+                    newWindow.close(); // 새 창 닫기
+                    location.reload(); // 기존 페이지 새로고침
+                }
+            };
+            xhr.send(formData); // 요청 전송
         }
 
         // 기존 창 닫기
@@ -291,6 +290,8 @@
             // 창 닫기
             newWindow.close();
         }
+
+
 
 
         function sample6_execDaumPostcode() {

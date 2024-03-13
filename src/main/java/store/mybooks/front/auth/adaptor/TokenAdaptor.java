@@ -52,7 +52,6 @@ public class TokenAdaptor {
 
     public RefreshTokenResponse refreshAccessToken(RefreshTokenRequest refreshTokenRequest) {
 
-        System.out.println("가보자고");
         ResponseEntity<RefreshTokenResponse> responseEntity =
                 restTemplate.exchange(gatewayAdaptorProperties.getAddress() + "/auth/refresh", HttpMethod.POST,
                         new HttpEntity<>(refreshTokenRequest, Utils.getHttpHeader()),

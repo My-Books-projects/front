@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import store.mybooks.front.admin.category.model.request.CategoryCreateRequest;
 import store.mybooks.front.admin.category.model.request.CategoryModifyRequest;
 import store.mybooks.front.admin.category.model.response.CategoryGetResponseForUpdate;
-import store.mybooks.front.admin.category.service.CategoryService;
+import store.mybooks.front.admin.category.service.CategoryAdminService;
 import store.mybooks.front.global.exception.ValidationFailException;
 
 /**
@@ -33,8 +33,8 @@ import store.mybooks.front.global.exception.ValidationFailException;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/admin/category")
-public class CategoryController {
-    private final CategoryService categoryService;
+public class CategoryAdminController {
+    private final CategoryAdminService categoryAdminService;
 
     /**
      * methodName : getCategoryPage <br>
@@ -47,7 +47,7 @@ public class CategoryController {
      */
     @GetMapping
     public String getCategoryPage(@PageableDefault Pageable pageable, Model model) {
-        model.addAttribute("categories", categoryService.getCategories(pageable));
+        model.addAttribute("categories", categoryAdminService.getCategories(pageable));
         return "admin/view/category/category-admin-page";
     }
 
@@ -61,7 +61,7 @@ public class CategoryController {
      */
     @GetMapping("/register")
     public String getCategoryRegisterPage(Model model) {
-        model.addAttribute(categoryService.getHighestCategories());
+        model.addAttribute(categoryAdminService.getHighestCategories());
         return "admin/view/category/category-register";
     }
 
@@ -79,7 +79,7 @@ public class CategoryController {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailException(bindingResult);
         }
-        categoryService.createCategory(categoryCreateRequest);
+        categoryAdminService.createCategory(categoryCreateRequest);
         return "redirect:/admin/category/register";
     }
 
@@ -93,7 +93,7 @@ public class CategoryController {
      */
     @GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable("id") Integer id) {
-        categoryService.deleteCategory(id);
+        categoryAdminService.deleteCategory(id);
         return "redirect:/admin/category";
     }
 
@@ -108,7 +108,7 @@ public class CategoryController {
      */
     @GetMapping("/update")
     public String getUpdateForm(@RequestParam("id") Integer id, Model model) {
-        CategoryGetResponseForUpdate categoryGetResponseForUpdate = categoryService.getCategory(id);
+        CategoryGetResponseForUpdate categoryGetResponseForUpdate = categoryAdminService.getCategory(id);
         model.addAttribute("category", categoryGetResponseForUpdate.getTargetCategory());
         model.addAttribute("levelOneCategoryName", categoryGetResponseForUpdate.getLevelOneCategoryName());
         model.addAttribute("levelTwoCategoryName", categoryGetResponseForUpdate.getLevelTwoCategoryName());
@@ -126,7 +126,7 @@ public class CategoryController {
      */
     @PostMapping("/update")
     public String updateCategory(@ModelAttribute CategoryModifyRequest categoryModifyRequest) {
-        categoryService.updateCategory(categoryModifyRequest);
+        categoryAdminService.updateCategory(categoryModifyRequest);
         return "redirect:/admin/category";
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import store.mybooks.front.admin.book.service.BookAdminService;
-import store.mybooks.front.admin.category.service.CategoryService;
+import store.mybooks.front.admin.category.service.CategoryAdminService;
 import store.mybooks.front.admin.coupon.model.request.CouponCreateRequest;
 import store.mybooks.front.admin.coupon.model.response.CouponGetResponse;
 import store.mybooks.front.admin.coupon.service.CouponService;
@@ -34,7 +34,7 @@ import store.mybooks.front.pageable.dto.response.PageResponse;
 public class CouponController {
     private final CouponService couponService;
     private final BookAdminService bookAdminService;
-    private final CategoryService categoryService;
+    private final CategoryAdminService categoryAdminService;
 
     /**
      * methodName : getCouponPage <br>
@@ -123,7 +123,7 @@ public class CouponController {
      */
     @GetMapping("/category-percentage-coupon-register")
     public String getCategoryPercentageCouponRegisterPage(Model model) {
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryAdminService.getCategories());
         return "admin/view/coupon/category-percentage-coupon-register";
     }
 
@@ -136,7 +136,7 @@ public class CouponController {
      */
     @GetMapping("/category-flat-discount-coupon-register")
     public String getCategoryFlatDiscountCouponRegisterPage(Model model) {
-        model.addAttribute("categories", categoryService.getCategories());
+        model.addAttribute("categories", categoryAdminService.getCategories());
         return "admin/view/coupon/category-flat-discount-coupon-register";
     }
 

@@ -25,4 +25,10 @@ public class TokenCreateRequest {
 
     private String status;
 
+    private String uuid;
+
+    private String ip;
+
+    private String userAgent;
+
 }

@@ -75,6 +75,8 @@ public class Utils {
     }
 
 
+
+
     public static HttpHeaders addAuthHeader(HttpServletRequest request) {
         HttpHeaders headers = Utils.getHttpHeader();
 
@@ -83,6 +85,8 @@ public class Utils {
             throw new AuthenticationIsNotValidException();
         }
         headers.set("Authorization", token);
+        headers.set("UserAgent", getUserAgent(request));
+        headers.set("UserIp",getUserIp(request));
         return headers;
     }
 
@@ -116,6 +120,14 @@ public class Utils {
     public static HttpHeaders getAuthHeader() {
         return (HttpHeaders) RequestContextHolder.currentRequestAttributes()
                 .getAttribute("authHeader", RequestAttributes.SCOPE_REQUEST);
+    }
+
+    public static String getUserAgent(HttpServletRequest request){
+        return request.getHeader("User-Agent");
+    }
+
+    public static String getUserIp(HttpServletRequest request){
+        return  request.getHeader("X-Forwarded-For");
     }
 
 

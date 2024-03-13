@@ -35,7 +35,7 @@ import store.mybooks.front.utils.Utils;
  */
 @Component
 @RequiredArgsConstructor
-public class CategoryAdaptor {
+public class CategoryAdminAdaptor {
     private final RestTemplate restTemplate;
 
     private final GatewayAdaptorProperties gatewayAdaptorProperties;

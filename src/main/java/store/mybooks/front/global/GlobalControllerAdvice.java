@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import store.mybooks.front.auth.exception.AccessIdForbiddenException;
 import store.mybooks.front.auth.exception.AuthenticationIsNotValidException;
-import store.mybooks.front.auth.exception.StatusIsNotActiveException;
+import store.mybooks.front.auth.exception.StatusIsDormancyException;
+import store.mybooks.front.auth.exception.StatusIsLockException;
 import store.mybooks.front.auth.exception.TokenExpiredException;
 
 /**
@@ -46,14 +47,15 @@ public class GlobalControllerAdvice {
 
     // 토큰 인증/인가와 관련된 모든 예외를 잡음
     @ExceptionHandler({AuthenticationIsNotValidException.class, AccessIdForbiddenException.class,
-            StatusIsNotActiveException.class, TokenExpiredException.class})
+            StatusIsDormancyException.class, TokenExpiredException.class, StatusIsLockException.class})
     public String handleAuthException(RuntimeException ex) {
 
-        if (ex instanceof AuthenticationIsNotValidException|ex instanceof TokenExpiredException) {
+        if (ex instanceof AuthenticationIsNotValidException | ex instanceof TokenExpiredException) {
             return "redirect:/login"; // 토큰조작 됐거나 , 만료됐음 -> 다시 로그인
-        } else if (ex instanceof StatusIsNotActiveException) {
-            // 유저가 탈퇴했음
-            return "redirect:/dormancy"; // todo 휴대폰인증 페이지로
+        } else if (ex instanceof StatusIsDormancyException) {
+            return "redirect:/verification/dormancy";  // 유저계정 휴면상태
+        } else if (ex instanceof StatusIsLockException) {
+            return "redirect:/verification/lock"; // 유정계정 잠금상태
         }
 
         // 권한없는 경우 index

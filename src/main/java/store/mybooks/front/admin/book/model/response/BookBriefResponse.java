@@ -2,6 +2,7 @@ package store.mybooks.front.admin.book.model.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import store.mybooks.front.image.dto.ImageResponse;
 
 /**
  * packageName    : store.mybooks.front.admin.book.model.response <br/>
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class BookBriefResponse {
     private Long id;
 
-//    private String bookImage;
+    private ImageResponse imageResponse;
 
     private String name;
 

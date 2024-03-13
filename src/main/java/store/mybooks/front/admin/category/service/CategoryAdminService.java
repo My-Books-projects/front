@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import store.mybooks.front.admin.category.adaptor.CategoryAdaptor;
+import store.mybooks.front.admin.category.adaptor.CategoryAdminAdaptor;
 import store.mybooks.front.admin.category.model.request.CategoryCreateRequest;
 import store.mybooks.front.admin.category.model.request.CategoryCreateRequestForTransmission;
 import store.mybooks.front.admin.category.model.request.CategoryModifyRequest;
@@ -29,8 +29,8 @@ import store.mybooks.front.pageable.dto.response.PageResponse;
  */
 @Service
 @RequiredArgsConstructor
-public class CategoryService {
-    private final CategoryAdaptor categoryAdaptor;
+public class CategoryAdminService {
+    private final CategoryAdminAdaptor categoryAdminAdaptor;
 
     /**
      * methodName : getCategories <br>
@@ -41,7 +41,7 @@ public class CategoryService {
      * @return pageResponse
      */
     public PageResponse<CategoryGetResponseForView> getCategories(Pageable pageable) {
-        PageResponse<CategoryGetResponseForView> pageResponse = categoryAdaptor.getCategories(pageable);
+        PageResponse<CategoryGetResponseForView> pageResponse = categoryAdminAdaptor.getCategories(pageable);
 
         return new PageResponse<>(
                 pageResponse.getContent(),
@@ -66,7 +66,7 @@ public class CategoryService {
      * @return list
      */
     public List<CategoryGetResponseForBookCreate> getCategories() {
-        return categoryAdaptor.getCategories();
+        return categoryAdminAdaptor.getCategories();
     }
 
 
@@ -78,7 +78,7 @@ public class CategoryService {
      * @return list
      */
     public List<CategoryIdAndName> getHighestCategories() {
-        return categoryAdaptor.getHighestCategories()
+        return categoryAdminAdaptor.getHighestCategories()
                 .stream()
                 .map(categoryGetResponse -> new CategoryIdAndName(categoryGetResponse.getId(),
                         categoryGetResponse.getName()))
@@ -94,7 +94,7 @@ public class CategoryService {
      * @return list
      */
     public List<CategoryIdAndName> getChildCategories(Integer parentCategoryId) {
-        return categoryAdaptor.getChildCategories(parentCategoryId)
+        return categoryAdminAdaptor.getChildCategories(parentCategoryId)
                 .stream()
                 .map(categoryGetResponse -> new CategoryIdAndName(categoryGetResponse.getId(),
                         categoryGetResponse.getName()))
@@ -114,7 +114,7 @@ public class CategoryService {
             parentCategoryId = categoryCreateRequest.getSecondParentCategoryId();
         }
 
-        categoryAdaptor.createCategory(new CategoryCreateRequestForTransmission(
+        categoryAdminAdaptor.createCategory(new CategoryCreateRequestForTransmission(
                 parentCategoryId,
                 categoryCreateRequest.getName()
         ));
@@ -128,7 +128,7 @@ public class CategoryService {
      * @param categoryModifyRequest CategoryModifyRequest
      */
     public void updateCategory(CategoryModifyRequest categoryModifyRequest) {
-        categoryAdaptor.updateCategory(categoryModifyRequest.getId(), new CategoryModifyRequestForTransmission(
+        categoryAdminAdaptor.updateCategory(categoryModifyRequest.getId(), new CategoryModifyRequestForTransmission(
                 categoryModifyRequest.getName()
         ));
     }
@@ -141,7 +141,7 @@ public class CategoryService {
      * @param id Integer
      */
     public void deleteCategory(Integer id) {
-        categoryAdaptor.deleteCategory(id);
+        categoryAdminAdaptor.deleteCategory(id);
     }
 
     /**
@@ -153,6 +153,6 @@ public class CategoryService {
      * @return CategoryGetResponseForUpdate get response for update
      */
     public CategoryGetResponseForUpdate getCategory(Integer id) {
-        return categoryAdaptor.getCategory(id);
+        return categoryAdminAdaptor.getCategory(id);
     }
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>쿠폰 선택</title>
+    <th:block th:replace="common/fragment/my-book/config/my-books-config::configFragment1"/>
+
+</head>
+<body>
+<div class="checkout-payment-option">
+    <div id="coupon-view" class="payment-option-wrapper">
+        <div class="single-payment-option" th:each="coupon, index:${couponList}">
+            <label>
+                <input type="radio" class="border-1" th:id="'coupon-'+${index.count}" name="wrap-radio"
+                       th:value="${coupon.name}" onclick="updateWrapValue(this)">
+                <label th:for="'coupon-'+${index.count}">
+                    <span th:text="${index.count}"></span>
+                    <span th:text="${coupon.name}"></span>
+                    <span class="discount-price" th:text="${coupon.discountRateOrCost}"></span>
+                </label>
+            </label>
+        </div>
+        <button type="button" id="coupon-btn" class="btn btn-outline-primary btn-sm"
+                onclick="sendCoupon()">선택
+        </button>
+    </div>
+</div>
+<script src="/assets/js/order/coupon.js"></script>
+</body>
+</html>

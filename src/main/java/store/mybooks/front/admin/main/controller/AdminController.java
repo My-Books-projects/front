@@ -3,6 +3,7 @@ package store.mybooks.front.admin.main.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import store.mybooks.front.auth.Annotation.RequiredAdminCookie;
 
 /**
  * packageName    : store.mybooks.front.admin.controller<br>
@@ -23,10 +24,10 @@ public class AdminController {
      *
      * @return 관리자 페이지 파일 명
      */
+
     @GetMapping
+    @RequiredAdminCookie
     public String doAdmin() {
-
         return "admin";
-
     }
 }

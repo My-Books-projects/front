@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>포장지 선택</title>
+    <th:block th:replace="common/fragment/my-book/config/my-books-config::configFragment1"/>
+
+</head>
+<body>
+<div class="checkout-payment-option">
+    <div id="wrap-view" class="payment-option-wrapper">
+        <div class="single-payment-option" th:each="wrap, index:${wrapList}">
+            <label>
+                <input type="radio" class="border-1" th:id="'wrap-'+${index.count}" name="wrap-radio"
+                       th:value="${wrap.name}" onclick="updateWrapValue(this)">
+                <label th:for="'wrap-'+${index.count}">
+                    <span th:text="${index.count}"></span>
+                    <span th:text="${wrap.name}"></span>
+                    <span class="price" th:text="${wrap.cost}"></span>
+                </label>
+            </label>
+        </div>
+        <button type="button" id="wrap-btn" class="btn btn-outline-primary btn-sm"
+                th:value="${id}"
+                onclick="sendWrap(this)">선택
+        </button>
+    </div>
+</div>
+<script th:inline="javascript">
+    function sendWrap(id) {
+        const wrapId = document.getElementById('wrap-btn').getAttribute('wrap-name');
+        const wrapCost = document.getElementById('wrap-btn').getAttribute('wrap-cost');
+        alert(wrapCost)
+        opener.document.getElementsByClassName("wrap-name")[id.value].textContent = wrapId
+        opener.document.getElementsByClassName("select-wrap").value = wrapId
+        opener.document.getElementById("wrap-total-cost").textContent = wrapCost + opener.document.getElementById("wrap-total-cost").textContent
+        alert(opener.document.getElementById("wrap-cost").value)
+        if (opener.document.getElementById("wrap-cost").value === "") {
+            opener.document.getElementById("wrap-cost").value = parseInt(wrapCost)
+        } else {
+            opener.document.getElementById("wrap-cost").value = parseInt(wrapCost) + parseInt(opener.document.getElementById("wrap-cost").value)
+        }
+        window.close()
+    }
+</script>
+<script>
+    function updateWrapValue(radio) {
+        const wrapBtn = document.getElementById('wrap-btn');
+        const wrapCost = radio.parentElement.querySelector('.price').innerText;
+        wrapBtn.setAttribute('wrap-name', radio.value);
+        wrapBtn.setAttribute('wrap-cost', wrapCost);
+
+    }
+</script>
+</body>
+</html>

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import store.mybooks.front.admin.category.model.response.CategoryIdAndName;
-import store.mybooks.front.admin.category.service.CategoryService;
+import store.mybooks.front.admin.category.service.CategoryAdminService;
 
 /**
  * packageName    : store.mybooks.front.category.controller
@@ -23,8 +23,8 @@ import store.mybooks.front.admin.category.service.CategoryService;
 @RestController
 @RequestMapping(("/admin/ajax/category"))
 @RequiredArgsConstructor
-public class CategoryAjaxController {
-    private final CategoryService categoryService;
+public class CategoryAdminAjaxController {
+    private final CategoryAdminService categoryAdminService;
 
     /**
      * methodName : getChildCategories <br>
@@ -37,6 +37,6 @@ public class CategoryAjaxController {
     @GetMapping
     public List<CategoryIdAndName> getChildCategories(
             @RequestParam(value = "parentCategoryId", required = false) Integer parentCategoryId) {
-        return parentCategoryId == null ? null : categoryService.getChildCategories(parentCategoryId);
+        return parentCategoryId == null ? null : categoryAdminService.getChildCategories(parentCategoryId);
     }
 }

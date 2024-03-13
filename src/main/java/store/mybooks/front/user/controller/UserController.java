@@ -1,6 +1,8 @@
 package store.mybooks.front.user.controller;
 
+import java.time.Duration;
 import java.util.Objects;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import store.mybooks.front.auth.adaptor.TokenAdaptor;
 import store.mybooks.front.auth.dto.request.TokenCreateRequest;
 import store.mybooks.front.auth.dto.response.TokenCreateResponse;
+import store.mybooks.front.auth.redis.RedisAuthService;
+import store.mybooks.front.config.RedisProperties;
 import store.mybooks.front.user.adaptor.UserAdaptor;
 import store.mybooks.front.user.dto.request.UserCreateRequest;
 import store.mybooks.front.user.dto.request.UserEmailRequest;
@@ -28,6 +32,7 @@ import store.mybooks.front.user.dto.response.UserEncryptedPasswordResponse;
 import store.mybooks.front.user.dto.response.UserGetResponse;
 import store.mybooks.front.user.dto.response.UserLoginResponse;
 import store.mybooks.front.utils.CookieUtils;
+import store.mybooks.front.utils.Utils;
 
 /**
  * packageName    : store.mybooks.front.user.controller<br>
@@ -50,6 +55,11 @@ public class UserController {
     private final TokenAdaptor tokenAdaptor;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final RedisAuthService redisAuthService;
+
+    private final RedisProperties redisProperties;
+
 
     /**
      * methodName : loginUserForm
@@ -95,6 +105,32 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 휴면계정인 사람 휴면인증 페이지로
+    @GetMapping("/verification/dormancy")
+    public String dormancyUserForm() {
+        return "dormancy";
+    }
+
+    // 휴면계정 dooray 인증 받겠다.
+    @PostMapping("/dormancy")
+    public String verifyDormancyUser() {
+        userAdaptor.verifyDormancyUser();
+        return "redirect:/";
+    }
+
+    @GetMapping("/verification/lock")
+    public String lockUserForm() {
+        return "lock";
+    }
+
+    @PostMapping("/lock")
+    public String verifyLockUser(@ModelAttribute UserPasswordModifyRequest request) {
+
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        userAdaptor.verifyLockUser(request);
+        return "redirect:/";
+    }
+
 
     /**
      * methodName : myPageForm
@@ -121,7 +157,8 @@ public class UserController {
      * @return string
      */
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute UserLoginRequest userLoginRequest, HttpServletResponse response) {
+    public String loginUser(@ModelAttribute UserLoginRequest userLoginRequest, HttpServletRequest request,
+                            HttpServletResponse response) {
 
         UserEmailRequest emailRequest = new UserEmailRequest(userLoginRequest.getEmail());
 
@@ -135,12 +172,19 @@ public class UserController {
 
             UserLoginResponse loginResponse = userAdaptor.completeLoginProcess(emailRequest);
 
-            // 쿠키추가
+            if (loginResponse.getIsAdmin()) {
+                String adminCookieValue = String.valueOf(UUID.randomUUID());
+                redisAuthService.setValues(adminCookieValue,
+                        Utils.getUserIp(request) + Utils.getUserAgent(request), Duration.ofMillis(
+                                redisProperties.getAdminExpiration()));
+                CookieUtils.addAdminCookie(response, adminCookieValue);
+            }
             TokenCreateResponse tokenCreateResponse =
                     tokenAdaptor.createToken(
                             new TokenCreateRequest(loginResponse.getIsAdmin(), loginResponse.getUserId(),
-                                    loginResponse.getStatus()));
+                                    loginResponse.getStatus(), String.valueOf(UUID.randomUUID()),Utils.getUserIp(request),Utils.getUserAgent(request)));
 
+            // 쿠키추가
             CookieUtils.addJwtCookie(response, tokenCreateResponse.getAccessToken());
             return "redirect:/";
         }
@@ -177,6 +221,7 @@ public class UserController {
      */
     @PostMapping("/user/modify/password")
     public String modifyUserPassword(@ModelAttribute UserPasswordModifyRequest modifyRequest) {
+
 
         // 비밀번호 암호화
         modifyRequest.setPassword(passwordEncoder.encode(modifyRequest.getPassword()));

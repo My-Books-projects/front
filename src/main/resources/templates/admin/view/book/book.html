@@ -3,6 +3,16 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{common/layout/admin-layout}">
 
+<style>
+    .book-image {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+
 <div layout:fragment="content">
     <script>
         let url = "/admin/book"
@@ -18,7 +28,7 @@
             <div class="row mt-3">
                 <div th:each="book : ${books.content}" class="col-md-3 mb-3">
                     <div class="card h-100">
-                        <!--                        <img th:src="@{${book.bookImage}}" alt="Book Image" class="card-img-top" src="https://via.placeholder.com/150">-->
+                        <img class="card-img-top book-image" th:src="${book.imageResponse.path + book.imageResponse.fileName+ book.imageResponse.extension}" alt="도서 썸네일 이미지">
                         <div class="card-body">
                             <a th:href="@{/admin/book/update(id=${book.id})}">
                                 <h5 class="card-title" th:text="${book.name}">도서명</h5>

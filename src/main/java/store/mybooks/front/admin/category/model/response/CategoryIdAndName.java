@@ -2,6 +2,7 @@ package store.mybooks.front.admin.category.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * packageName    : store.mybooks.front.category.model
@@ -16,6 +17,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CategoryIdAndName {
     private Integer id;
     private String name;

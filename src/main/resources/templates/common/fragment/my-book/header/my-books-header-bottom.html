@@ -8,35 +8,59 @@
                 <div class="nav-inner">
                     <!-- 카테고리 시작부분  -->
                     <div class="mega-category-menu">
-                        <span class="cat-button"><i class="lni lni-menu"></i>All Categories</span>
-                        <ul class="sub-category">
-                            <li><a href="product-grids.html">Electronics <i class="lni lni-chevron-right"></i></a>
-                                <ul class="inner-sub-category">
-                                    <li><a href="product-grids.html">Digital Cameras</a></li>
-                                    <li><a href="product-grids.html">Camcorders</a></li>
-                                    <li><a href="product-grids.html">Camera Drones</a></li>
-                                    <li><a href="product-grids.html">Smart Watches</a></li>
-                                    <li><a href="product-grids.html">Headphones</a></li>
-                                    <li><a href="product-grids.html">MP3 Players</a></li>
-                                    <li><a href="product-grids.html">Microphones</a></li>
-                                    <li><a href="product-grids.html">Chargers</a></li>
-                                    <li><a href="product-grids.html">Batteries</a></li>
-                                    <li><a href="product-grids.html">Cables & Adapters</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="product-grids.html">accessories</a></li>
-                            <li><a href="product-grids.html">Televisions</a></li>
-                            <li><a href="product-grids.html">best selling</a></li>
-                            <li><a href="product-grids.html">top 100 offer</a></li>
-                            <li><a href="product-grids.html">sunglass</a></li>
-                            <li><a href="product-grids.html">watch</a></li>
-                            <li><a href="product-grids.html">man’s product</a></li>
-                            <li><a href="product-grids.html">Home Audio & Theater</a></li>
-                            <li><a href="product-grids.html">Computers & Tablets </a></li>
-                            <li><a href="product-grids.html">Video Games </a></li>
-                            <li><a href="product-grids.html">Home Appliances </a></li>
-                        </ul>
+                        <span class="cat-button" id="categoryMenu"><i class="lni lni-menu"></i>All Categories</span>
+                        <script>
+                            window.addEventListener('DOMContentLoaded', function (){
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('GET', '/ajax/category', true);
+                                xhr.onreadystatechange = function() {
+                                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                                        if (xhr.status === 200) {
+                                            var data = JSON.parse(xhr.responseText);
+                                            renderCategories(data);
+                                        } else {
+                                            console.error('Error fetching categories:', xhr.status);
+                                        }
+                                    }
+                                };
+                                xhr.send();
+                            });
+
+                            function renderCategories(data) {
+                                var categoryMenu = document.getElementById('categoryMenu');
+                                var ul1 = document.createElement('ul');
+                                ul1.classList.add("sub-category");
+
+                                data.forEach(function(data) {
+                                    var li2 = document.createElement('li');
+                                    var a1 = document.createElement('a');
+                                    a1.href = "#";
+                                    a1.text = data.parentCategoryName;
+                                    var icon = document.createElement("i");
+                                    icon.classList.add("lni", "lni-chevron-right");
+
+                                    var ul3 = document.createElement('ul');
+                                    ul3.classList.add("inner-sub-category");
+
+                                    data.childCategoryList.forEach(function(childCategory) {
+                                        var li4 = document.createElement('li');
+                                        var a2 = document.createElement('a');
+                                        a2.href = `#`;
+                                        a2.textContent = childCategory.name;
+                                        li4.appendChild(a2);
+                                        ul3.appendChild(li4);
+                                    });
+
+                                    a1.appendChild(icon);
+                                    li2.appendChild(a1);
+                                    li2.appendChild(ul3);
+                                    ul1.appendChild(li2);
+                                });
+                                categoryMenu.appendChild(ul1);
+                            }
+                        </script>
                     </div>
+
                     <!-- End Mega Category Menu -->
                     <!-- Start Navbar -->
                     <nav class="navbar navbar-expand-lg">

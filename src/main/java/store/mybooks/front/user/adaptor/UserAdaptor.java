@@ -23,6 +23,7 @@ import store.mybooks.front.user.dto.response.UserCreateResponse;
 import store.mybooks.front.user.dto.response.UserEncryptedPasswordResponse;
 import store.mybooks.front.user.dto.response.UserGetResponse;
 import store.mybooks.front.user.dto.response.UserGradeModifyResponse;
+import store.mybooks.front.user.dto.response.UserInactiveVerificationResponse;
 import store.mybooks.front.user.dto.response.UserLoginResponse;
 import store.mybooks.front.user.dto.response.UserModifyResponse;
 import store.mybooks.front.user.dto.response.UserOauthCreateResponse;
@@ -59,7 +60,7 @@ public class UserAdaptor {
 
         ResponseEntity<UserEncryptedPasswordResponse> responseEntity =
                 restTemplate.exchange(gatewayAdaptorProperties.getAddress() + URL + "/verification", HttpMethod.POST,
-                        new HttpEntity<>(request,Utils.getHttpHeader()),
+                        new HttpEntity<>(request, Utils.getHttpHeader()),
                         new ParameterizedTypeReference<>() {
                         });
 
@@ -70,10 +71,41 @@ public class UserAdaptor {
         return responseEntity.getBody();
     }
 
-    public UserLoginResponse completeLoginProcess(UserEmailRequest request){
+    @RequiredAuthorization
+    public void verifyDormancyUser() {
+
+        ResponseEntity<UserInactiveVerificationResponse> responseEntity =
+                restTemplate.exchange(gatewayAdaptorProperties.getAddress() + URL_MEMBER + "/verification/dormancy",
+                        HttpMethod.POST,
+                        new HttpEntity<>(Utils.getAuthHeader()),
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        if (responseEntity.getStatusCode() != HttpStatus.OK) {
+            throw new RuntimeException();
+        }
+    }
+
+    @RequiredAuthorization
+    public void verifyLockUser(UserPasswordModifyRequest request) {
+
+        ResponseEntity<UserInactiveVerificationResponse> responseEntity =
+                restTemplate.exchange(gatewayAdaptorProperties.getAddress() + URL_MEMBER + "/verification/lock",
+                        HttpMethod.POST,
+                        new HttpEntity<>(request, Utils.getAuthHeader()),
+                        new ParameterizedTypeReference<>() {
+                        });
+
+        if (responseEntity.getStatusCode() != HttpStatus.OK) {
+            throw new RuntimeException();
+        }
+    }
+
+    public UserLoginResponse completeLoginProcess(UserEmailRequest request) {
         ResponseEntity<UserLoginResponse> responseEntity =
-                restTemplate.exchange(gatewayAdaptorProperties.getAddress() + URL + "/verification/complete", HttpMethod.POST,
-                        new HttpEntity<>(request,Utils.getHttpHeader()),
+                restTemplate.exchange(gatewayAdaptorProperties.getAddress() + URL + "/verification/complete",
+                        HttpMethod.POST,
+                        new HttpEntity<>(request, Utils.getHttpHeader()),
                         new ParameterizedTypeReference<>() {
                         });
 
@@ -192,6 +224,8 @@ public class UserAdaptor {
      * @param userId        id
      * @param modifyRequest request
      */
+
+    @RequiredAuthorization
     public void modifyUserStatus(Long userId, UserStatusModifyRequest modifyRequest) {
 
         HttpHeaders headers = Utils.getHttpHeader();
@@ -220,6 +254,7 @@ public class UserAdaptor {
      * @param userId        id
      * @param modifyRequest request
      */
+    @RequiredAuthorization
     public void modifyUserGrade(Long userId, UserGradeModifyRequest modifyRequest) {
 
         HttpHeaders headers = Utils.getHttpHeader();

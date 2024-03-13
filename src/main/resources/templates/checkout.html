@@ -110,44 +110,12 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div class="col-md-12">
-                                            <div class="checkout-payment-option">
-                                                <h6 class="heading-6 font-weight-400 payment-title">포장 옵션
-                                                    <label>
-                                                        <input name="wrapRadio" type="radio" id="wrap-unused" checked/>
-                                                        포장 안함
-                                                    </label>
-                                                    <label>
-                                                        <input name="wrapRadio" type="radio" id="wrap-used"/>
-                                                        포장
-                                                    </label>
-                                                </h6>
-
-                                                <div id="wrap-view" class="payment-option-wrapper"
-                                                     style="display: none">
-                                                    <div class="single-payment-option"
-                                                         th:each="wrap, index:${wrapList}">
-                                                        <input type="radio" name="wrap-item"
-                                                               th:id="'wrap'+${index.count}"/>
-                                                        <label th:for="'wrap'+${index.count}">
-                                                            <span th:text="${index.count}"></span>
-                                                            <span th:text="${wrap.name}"></span>
-                                                            <span class="price" th:text="${wrap.cost}"></span>
-                                                        </label>
-
-                                                        <!-- 포장 값 넣기 -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </section>
                             </li>
                             <li>
                                 <h5>주문 내역
                                 </h5>
-                                <hr>
                                 <section class="form-content">
                                     <div class="row">
                                         <div class="col-12">
@@ -160,18 +128,45 @@
                                                         <th class="col-1">판매가</th>
                                                         <th class="col-1">수량</th>
                                                         <th class="col-1">합계</th>
+                                                        <th class="col-1">포장</th>
+                                                        <th class="col-1">쿠폰</th>
+                                                        <th class="col-1"></th>
                                                         <th class="col-1"></th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody>
-                                                    <tr>
+                                                    <tbody th:each="book, index:${bookList}">
+                                                    <tr th:id="${index.index}">
                                                         <td th:text="${book.name}"></td>
-                                                        <td th:text="${book.originalCost}"></td>
+                                                        <td></td>
+                                                        <!--                                                        <td th:text="${book.originalCost}"></td>-->
                                                         <td th:text="${book.saleCost}"></td>
-                                                        <td th:text="${quantity}"></td>
+                                                        <td th:text="${book.cartDetailAmount}"></td>
                                                         <td th:text="${totalCost}"></td>
+                                                        <td class="form-input">
+                                                            <span class="wrap-name"></span>
+                                                            <input class="select-wrap"
+                                                                   name="select-wrap-id"
+                                                                   type="hidden"
+                                                                   readonly>
+                                                            <input class="select-wrap-cost" name="select-wrap-cost"
+                                                                   type="hidden">
+                                                        </td>
                                                         <td>
-                                                            <button type="button" class="button btn-primary btn-sm">쿠폰
+                                                            <span id="coupon-name"></span>
+
+                                                        </td>
+                                                        <td>
+                                                            <button id="coupon-button" type="button"
+                                                                    class="button btn-primary btn-sm"
+                                                                    th:value="${book.bookId}"
+                                                                    onclick="clickCoupon()">쿠폰
+                                                            </button>
+                                                        </td>
+                                                        <td>
+                                                            <button th:id="'wrap-botton-'+${index.index}" type="button"
+
+                                                                    onclick="wrap(this.parentElement.parentElement.id)"
+                                                                    class="button btn-primary btn-sm">포장
                                                             </button>
                                                         </td>
                                                     </tr>
@@ -180,7 +175,23 @@
 
                                             </div>
                                         </div>
-
+                                    </div>
+                                </section>
+                            </li>
+                            <li>
+                                <h5>포인트 사용</h5>
+                                <section class="form-control">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div>
+                                                <label>
+                                                    <p th:text="'보유 포인트: '+ ${point}"></p>
+                                                    <input id="user-point" type="text" placeholder="포인트 사용"
+                                                           min="0" value="0"
+                                                           th:max="${point}">
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </section>
                             </li>
@@ -193,41 +204,31 @@
                                         <div class="col-12">
                                             <div class="checkout-payment-form">
                                                 <div class="single-form form-default">
-                                                    <label>Cardholder Name</label>
-                                                    <div class="form-input form">
-                                                        <input type="text" placeholder="Cardholder Name">
+                                                    <label>결제 금액</label>
+                                                    <div class="form-text">
+                                                        <span id="totalCost" th:text="${totalCost}"></span>
                                                     </div>
                                                 </div>
                                                 <div class="single-form form-default">
-                                                    <label>Card Number</label>
-                                                    <div class="form-input form">
-                                                        <input id="credit-input" type="text"
-                                                               placeholder="0000 0000 0000 0000">
-                                                        <img src="assets/images/payment/card.png" alt="card">
+                                                    <label>포장 비용</label>
+                                                    <div class="form-text">
+                                                        <span id="wrap-total-cost"></span>
+                                                        <input type="text" id="wrap-cost"/>
                                                     </div>
                                                 </div>
-                                                <div class="payment-card-info">
-                                                    <div class="single-form form-default mm-yy">
-                                                        <label>Expiration</label>
-                                                        <div class="expiration d-flex">
-                                                            <div class="form-input form">
-                                                                <input type="text" placeholder="MM">
-                                                            </div>
-                                                            <div class="form-input form">
-                                                                <input type="text" placeholder="YYYY">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="single-form form-default">
-                                                        <label>CVC/CVV <span><i
-                                                                class="mdi mdi-alert-circle"></i></span></label>
-                                                        <div class="form-input form">
-                                                            <input type="text" placeholder="***">
-                                                        </div>
+                                                <div class="single-form form-default">
+                                                    <label>쿠폰 적용 금액</label>
+                                                    <div class="form-input">
+                                                        <input id="discount-cost" type="text" class="form-control w-25">
                                                     </div>
                                                 </div>
+
                                                 <div class="single-form form-default button">
-                                                    <button class="btn">pay now</button>
+                                                    <form>
+                                                        <input/>
+                                                        <input/>
+                                                        <button class="btn">pay now</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -242,32 +243,7 @@
         </div>
     </section>
     <script src="/assets/js/order/order.js"></script>
-    <script>
-        function address() {
-            const width = 800
-            const height = 600
-            const left = Math.ceil((window.screen.width - width) / 2);
-            const top = Math.ceil((window.screen.height - height) / 2)
-            window.open("/address", "_blank", "toolbar=yes,scrollbars=yes,top=" + top + ",left=" + left + ",width=" + width + ",height=" + height)
-        }
 
-        function clickCoupon() {
-            var couponCode = document.getElementById('couponCode').value;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/applyCoupon?code=" + couponCode, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    if (xhr.status == 200) {
-
-                    } else {
-                    }
-                }
-            };
-            xhr.send();
-        }
-
-    </script>
 
 </div>
 </html>
