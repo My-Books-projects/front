@@ -72,7 +72,7 @@
                         <div class="product-info">
                             <h1 class="title">도서명: <span th:text="${book.name}"></span></h1>
                             <p>저자: <span th:text="${authorNameList}"></span></p>
-                            <p>출판사: <span th:text="${categoryNameList}"></span></p>
+                            <p>출판사: <span th:text="${book.publisher.name}"></span></p>
                             <p>카테고리: <span th:text="${categoryNameList}"></span></p>
                             <p>태그: <span th:text="${tagNameList}"></span></p>
                             <p>리뷰: <span></span></p>
